@@ -92,6 +92,10 @@ const ProductCard = ({ product }) => {
 					{product.name}
 				</Heading>
 
+				<Text fontSize='s' color={textColor} mb={4}>
+					{product.description}
+				</Text>
+
 				<Text fontWeight='bold' fontSize='xl' color={textColor} mb={4}>
 					${product.price}
 				</Text>
@@ -119,6 +123,12 @@ const ProductCard = ({ product }) => {
 								name='name'
 								value={updatedProduct.name}
 								onChange={(e) => setUpdatedProduct({ ...updatedProduct, name: e.target.value })}
+							/>
+							<Input
+								placeholder='Product Description'
+								name='description'
+								value={updatedProduct.description}
+								onChange={(e) => setUpdatedProduct({ ...updatedProduct, description: e.target.value })}
 							/>
 							<Input
 								placeholder='Price'
