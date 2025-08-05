@@ -6,6 +6,8 @@ import {
 	Input,
 	Box,
 	Spinner,
+	Checkbox,
+	Select,
 } from "@chakra-ui/react";
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
@@ -15,6 +17,7 @@ import { useInView } from "react-intersection-observer";
 
 const HomePage = () => {
 	const { fetchProducts, products, hasMore, loading, resetProducts } = useProductStore();
+	const [sortBy, setSortBy] = useState('');
 
 	const [page, setPage] = useState(1);
 	const [searchTerm, setSearchTerm] = useState("");
@@ -26,8 +29,9 @@ const HomePage = () => {
 	useEffect(() => {
 		resetProducts(); // Clear existing list
 		setPage(1);
-		fetchProducts({ page: 1, search: searchTerm });
-	}, [searchTerm]);
+		
+		fetchProducts({ page: 1, search: searchTerm, sortBy });
+	}, [searchTerm, sortBy, fetchProducts, resetProducts]);
 
 	// Fetch more when scrolling near bottom
 	useEffect(() => {
@@ -57,11 +61,19 @@ const HomePage = () => {
 
 				<Box as='form' onSubmit={handleSearch} w={"full"}>
 					<Input
+					    _placeholder={{ color: "inherit" }}
+						css={{ "--error-color": "green" }}
 						placeholder='Search by name, description, price, or image...'
 						value={searchInput}
 						onChange={(e) => setSearchInput(e.target.value)}
 						size='lg'
 					/>
+					Sort by:
+					<Select width={"20%"} ml={2} value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+						<option value=''>None</option>
+						<option value='asc'>Price: Low to High</option>
+						<option value='desc'>Price: High to Low</option>
+					</Select>
 				</Box>
 
 				<SimpleGrid
