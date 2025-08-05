@@ -6,9 +6,14 @@ const productSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		description: {
+			type: String,
+			required: false,
+		},
 		price: {
 			type: Number,
 			required: true,
+			set: v => typeof v === 'string' ? parseFloat(v) : v
 		},
 		image: {
 			type: String,
