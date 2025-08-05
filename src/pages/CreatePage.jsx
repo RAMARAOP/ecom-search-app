@@ -5,6 +5,7 @@ import { useProductStore } from "../store/product";
 const CreatePage = () => {
 	const [newProduct, setNewProduct] = useState({
 		name: "",
+		description: "",
 		price: "",
 		image: "",
 	});
@@ -29,7 +30,7 @@ const CreatePage = () => {
 				isClosable: true,
 			});
 		}
-		setNewProduct({ name: "", price: "", image: "" });
+		setNewProduct({ name: "", description: "", price: "", image: "" });
 	};
 
 	return (
@@ -46,6 +47,12 @@ const CreatePage = () => {
 							name='name'
 							value={newProduct.name}
 							onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+						/>
+						<Input
+							placeholder='Product Description'
+							name='price description'
+							value={newProduct.description}
+							onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
 						/>
 						<Input
 							placeholder='Price'
