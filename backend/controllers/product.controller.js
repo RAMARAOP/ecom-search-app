@@ -1,15 +1,27 @@
 import mongoose from "mongoose";
 import Product from "../models/product.model.js";
-
 export const getProducts = async (req, res) => {
 	try {
+		// ✅ One-time fix using native MongoDB driver through Mongoose
+		await Product.collection.updateMany(
+			{ price: { $type: "string" } },
+			[{ $set: { price: { $toDouble: "$price" } } }]
+		);
+
+		// Proceed as usual
 		const page = parseInt(req.query.page) || 1;
 		const limit = parseInt(req.query.limit) || 10;
+		const sortOrder = req.query.sortBy; // 'asc' or 'desc'
 		const search = req.query.search || "";
 
-		let query = {};
+		let sortByObj = {};
+		if (sortOrder === 'asc') {
+			sortByObj.price = 1;
+		} else if (sortOrder === 'desc') {
+			sortByObj.price = -1;
+		}
 
-		// Only add $or if search term exists
+		const query = {};
 		if (search.trim() !== "") {
 			query.$or = [
 				{ name: { $regex: search, $options: "i" } },
@@ -23,9 +35,9 @@ export const getProducts = async (req, res) => {
 		}
 
 		const products = await Product.find(query)
+			.sort(sortByObj)
 			.skip((page - 1) * limit)
-			.limit(limit)
-			.sort({ createdAt: -1 });
+			.limit(limit);
 
 		const totalCount = await Product.countDocuments(query);
 		const hasMore = page * limit < totalCount;
@@ -40,6 +52,8 @@ export const getProducts = async (req, res) => {
 		res.status(500).json({ success: false, message: "Server Error" });
 	}
 };
+
+
 
 
 export const createProduct = async (req, res) => {
