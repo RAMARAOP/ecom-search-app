@@ -30,11 +30,11 @@ export const useProductStore = create((set, get) => ({
 	},
 
 	// Fetch products with optional pagination and search
-	fetchProducts: async ({ page = 1, search = "" } = {}) => {
+	fetchProducts: async ({ page = 1, search = "", sortBy = '' } = {}) => {
 		set({ loading: true });
 		try {
 			const res = await axios.get("/api/products", {
-				params: { page, search },
+				params: { page, search, sortBy },
 			});
 			const newProducts = res.data.products || res.data.data || [];
 
